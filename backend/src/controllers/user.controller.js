@@ -161,7 +161,7 @@ const logOutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "user logged out successfully"));
 });
 
-//for frontend users only use this method to refresh the  access token if  access token is expired 
+//for frontend users only use this method to refresh the  access token if  access token is expired
 const refreshAccessToken = asyncHandler(async (req, res) => {
   const incomingRefreshToken =
     req.cookies.refreshToken || req.body.refreshToken;
@@ -219,7 +219,6 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "password changed successfully"));
 });
 
-
 const forgetPassword = asyncHandler(async (req, res) => {
   // Step 1: Get email from frontend
   const { email } = req.body;
@@ -251,7 +250,6 @@ const forgetPassword = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, {}, "OTP sent to your email"));
 });
-
 
 const verifyOtp = asyncHandler(async (req, res) => {
   const { email, otp } = req.body;
@@ -307,6 +305,75 @@ const resetPassword = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "Password reset successfully"));
 });
 
+// Generate OTP for Email Verification after login
+const generateEmailOtp = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  // Check if the user exists in the database
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  // Generate a 6-digit OTP
+  const otp = generateOTP(6);
+
+  // Hash the OTP for security
+  const hashedOtp = crypto
+    .createHash("sha256")
+    .update(otp.toString())
+    .digest("hex");
+
+  // Store the hashed OTP with an expiration time (e.g., 10 minutes)
+  otpStore[email] = { otp: hashedOtp, expiresAt: Date.now() + 600000 }; // 600000 ms = 10 minutes
+
+  // Send the OTP to the user's email
+  await sendOtpEmail(email, otp);
+
+  return res.status(200).json({
+    success: true,
+    message: `OTP sent to ${email}. Please check your inbox to verify your email.`,
+  });
+});
+
+// Verify OTP for Email Verification after login
+const verifyEmailOtp = asyncHandler(async (req, res) => {
+  const { email, otp } = req.body;
+
+  // Check if an OTP exists for the email and hasn't expired
+  const storedOtp = otpStore[email];
+  if (!storedOtp || storedOtp.expiresAt < Date.now()) {
+    throw new ApiError(400, "OTP has expired or is invalid");
+  }
+
+  // Hash the OTP provided by the user
+  const hashedOtp = crypto
+    .createHash("sha256")
+    .update(otp.toString())
+    .digest("hex");
+
+  // Compare the hashed OTP with the stored one
+  if (hashedOtp !== storedOtp.otp) {
+    throw new ApiError(400, "Invalid OTP");
+  }
+
+  // OTP is valid, mark email as verified
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  user.emailVerified = true; // Assuming there's an `emailVerified` field in the User schema
+  await user.save();
+
+  // Optionally clear the OTP from the store after verification
+  delete otpStore[email];
+
+  return res.status(200).json({
+    success: true,
+    message: "Email verified successfully",
+  });
+});
 export {
   registerUser,
   logingUser,
@@ -316,4 +383,6 @@ export {
   resetPassword,
   refreshAccessToken,
   changeCurrentPassword,
+  generateEmailOtp,
+  verifyEmailOtp
 };
