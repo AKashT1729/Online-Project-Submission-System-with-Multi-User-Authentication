@@ -1,0 +1,125 @@
+1)---Online Project Submission System with Multi-User Authentication
+Open
+Posted yesterday
+•
+Ends in 5 days
+$10-15 USD
+
+Paid on delivery
+
+Description:
+
+We are developing an online platform for college students to submit their projects to their designated project guide and the Head of the Department (HoD) for approval.
+The platform will feature three types of users: students, project guides, and HoDs. Each user will have their own login and registration page, accessible via mobile 
+number or Gmail, with verification via OTP (One-Time Password).
+
+Upon successful registration, students will have access to a dashboard where they can submit project details, including project name, project details, team members' 
+names, students' registration numbers, and upload a Software Requirements Specification (SRS) file. The submitted projects will be reviewed by the project guide first,
+followed by the HoD for final approval.
+
+For project guides and HoDs, their dashboards will include a "View SRS" button next to each submitted project. Clicking on this button will allow them to view the 
+uploaded SRS file for better evaluation and decision-making.
+
+If a project is approved, an automatic notification will be sent to the student's registered email or mobile number. In the event of project rejection, a notification 
+stating "Your project has been rejected" will be sent to the student's registered contact information.
+
+Additionally, the platform will include a "Forgot Password" button for users to reset their password via OTP for added security and convenience.
+
+Key Features:
+
+Multi-User Authentication (Student, Project Guide, HoD)
+
+Registration via Mobile Number or Gmail
+
+OTP Verification for Registration and Password Reset
+
+Project Submission with Details (Project Name, Project Details, Team Members' Names, Students' Registration Numbers)
+
+Ability for Students to Upload SRS File
+
+Review and Approval Workflow by Project Guide and HoD
+
+"View SRS" Button on Project Guide and HoD Dashboards
+
+Automatic Notifications for Project Approval and Rejection
+
+Forgot Password Feature with OTP Reset
+
+Secure and User-Friendly Interface
+
+Deliverables:
+
+Fully Functional Online Platform with Multi-User Authentication
+
+User Registration and Login Pages
+
+OTP Verification System for Registration and Password Reset
+
+Project Submission Form with Validation and SRS File Upload
+
+Review and Approval Workflow
+
+"View SRS" Button Integration on Project Guide and HoD Dashboards
+
+Automatic Notifications for Project Status Updates
+
+Forgot Password Feature with OTP Reset
+
+Secure Database Management
+
+Timeline:
+
+The project is expected to be completed within [specify timeline], including development, testing, and implementation phases.
+
+Budget:
+
+Our budget for this project is [specify budget]. We are open to discussing the budget based on the scope of work and deliverables.
+
+Skills Required:
+
+Web Development
+
+User Authentication and Authorization
+
+OTP Integration
+
+Notification System Integration
+
+File Upload Functionality
+
+Database Management
+
+Additional Information:
+
+The platform should adhere to industry-standard security measures to protect user data.
+
+Regular updates and progress reports will be required throughout the development process.
+
+Mobile responsiveness is essential for seamless access across devices.
+
+The platform should be scalable to accommodate future enhancements and user growth.
+
+Note: Please provide examples of similar projects you have worked on in the past, along with your proposal
+
+
+)---I require an experienced web developer who can effectively construct an interactive timetable using HTML, CSS and Javascript. This timetable is intended to 
+showcase class schedules.
+
+The ideal professional for this project would have a strong grasp of the following:
+
+- Intuitive user interface design, ensuring the timetable is user-friendly
+
+- Expertise in HTML, CSS and JavaScript
+
+- Experience with the creation of interactive elements that can deal with real-time updates
+
+The timetable must have the following functionalities:
+
+- Filtering by day, week, or month
+
+- Highlight of current time
+
+- Adding and editing of class schedules
+
+Only candidates with previous experience in similar projects and a robust portfolio of user-interactive sites will be considered. I look forward to creating an easily 
+navigable and efficient timetable tool for class schedule managemen
