@@ -1,11 +1,4 @@
 1)---Online Project Submission System with Multi-User Authentication
-Open
-Posted yesterday
-•
-Ends in 5 days
-$10-15 USD
-
-Paid on delivery
 
 Description:
 
@@ -53,7 +46,7 @@ Fully Functional Online Platform with Multi-User Authentication
 
 User Registration and Login Pages
 
-OTP Verification System for Registration and Password Reset
+OTP Verification System for Email verification
 
 Project Submission Form with Validation and SRS File Upload
 
@@ -67,13 +60,6 @@ Forgot Password Feature with OTP Reset
 
 Secure Database Management
 
-Timeline:
-
-The project is expected to be completed within [specify timeline], including development, testing, and implementation phases.
-
-Budget:
-
-Our budget for this project is [specify budget]. We are open to discussing the budget based on the scope of work and deliverables.
 
 Skills Required:
 
@@ -89,37 +75,4 @@ File Upload Functionality
 
 Database Management
 
-Additional Information:
 
-The platform should adhere to industry-standard security measures to protect user data.
-
-Regular updates and progress reports will be required throughout the development process.
-
-Mobile responsiveness is essential for seamless access across devices.
-
-The platform should be scalable to accommodate future enhancements and user growth.
-
-Note: Please provide examples of similar projects you have worked on in the past, along with your proposal
-
-
-)---I require an experienced web developer who can effectively construct an interactive timetable using HTML, CSS and Javascript. This timetable is intended to 
-showcase class schedules.
-
-The ideal professional for this project would have a strong grasp of the following:
-
-- Intuitive user interface design, ensuring the timetable is user-friendly
-
-- Expertise in HTML, CSS and JavaScript
-
-- Experience with the creation of interactive elements that can deal with real-time updates
-
-The timetable must have the following functionalities:
-
-- Filtering by day, week, or month
-
-- Highlight of current time
-
-- Adding and editing of class schedules
-
-Only candidates with previous experience in similar projects and a robust portfolio of user-interactive sites will be considered. I look forward to creating an easily 
-navigable and efficient timetable tool for class schedule managemen
