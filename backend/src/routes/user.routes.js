@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  changeCurrentPassword,
   forgetPassword,
   generateEmailOtp,
   logingUser,
@@ -20,6 +21,7 @@ routes.route("/logIn").post(logingUser);
 
 routes.route("/logout").post(verifyJWT, logOutUser);
 
+routes.route("/changePassword").post(verifyJWT,changeCurrentPassword)
 routes.route("/forgetPassword").post(forgetPassword);
 routes.route("/verifyOtp").post(verifyOtp);
 routes.route("/resetPassword").post(resetPassword);
