@@ -132,6 +132,7 @@ const logingUser = asyncHandler(async (req, res) => {
           user: loggedInUser,
           accessToken,
           refreshToken,
+          role: user.role
         },
         "User logged in successfully"
       )
@@ -386,6 +387,8 @@ const verifyEmailOtp = asyncHandler(async (req, res) => {
     message: "Email verified successfully",
   });
 });
+
+
 export {
   registerUser,
   logingUser,
