@@ -1,4 +1,5 @@
 import { Project } from "../models/Project.models.js";
+import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
@@ -11,8 +12,9 @@ const submitProject = asyncHandler(async (req, res) => {
   if (!projectName || !projectDetails || !teamMembers || !registrationNumbers) {
     throw new ApiError(400, "All fields are required");
   }
-  const localSrsFile = req.files?.srsFile[0]?.path;
-
+  const localSrsFile = req.file?.path;
+    console.log(localSrsFile);
+    
   if (!localSrsFile) {
     throw new ApiError(400, "Project file is required");
   }
