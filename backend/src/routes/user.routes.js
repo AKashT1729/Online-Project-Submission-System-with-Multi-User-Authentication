@@ -5,6 +5,7 @@ import {
   generateEmailOtp,
   logingUser,
   logOutUser,
+  refreshAccessToken,
   registerUser,
   resetPassword,
   verifyEmailOtp,
@@ -12,21 +13,21 @@ import {
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/auth.middlewares.js";
 
-const routes = Router();
+const router = Router();
 
 // API endpoints for User management
-routes.route("/register").post(registerUser);
+router.route("/register").post(registerUser);
 
-routes.route("/logIn").post(logingUser);
+router.route("/logIn").post(logingUser);
 
-routes.route("/logout").post(verifyJWT, logOutUser);
+router.route("/logout").post(verifyJWT, logOutUser);
+router.route("/refresh-token").post(refreshAccessToken);
+router.route("/changePassword").post(verifyJWT,changeCurrentPassword)
+router.route("/forgetPassword").post(forgetPassword);
+router.route("/verifyOtp").post(verifyOtp);
+router.route("/resetPassword").post(resetPassword);
 
-routes.route("/changePassword").post(verifyJWT,changeCurrentPassword)
-routes.route("/forgetPassword").post(forgetPassword);
-routes.route("/verifyOtp").post(verifyOtp);
-routes.route("/resetPassword").post(resetPassword);
+router.route("/generate-otp").post(verifyJWT, generateEmailOtp);
+router.route("/verify-otp").post(verifyJWT, verifyEmailOtp);
 
-routes.route("/generate-otp").post(verifyJWT, generateEmailOtp);
-routes.route("/verify-otp").post(verifyJWT, verifyEmailOtp);
-
-export default routes;
+export default router;
