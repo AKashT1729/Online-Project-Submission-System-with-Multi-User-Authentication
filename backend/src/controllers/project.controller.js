@@ -1,26 +1,45 @@
-import { ApiResponse } from "../utils/apiResponse";
-import { asyncHandler } from "../utils/asyncHandler";
+import { Project } from "../models/Project.models.js";
+import { ApiResponse } from "../utils/apiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
+const submitProject = asyncHandler(async (req, res) => {
+  const { projectName, projectDetails, teamMembers, registrationNumbers } =
+    req.body;
 
+  // Check if all required fields are provided
+  if (!projectName || !projectDetails || !teamMembers || !registrationNumbers) {
+    throw new ApiError(400, "All fields are required");
+  }
+  const localSrsFile = req.files?.srsFile[0]?.path;
 
-const getRoleBasedData = asyncHandler(async (req, res) => {
-    const userRole = req.user.role;
-  
-    if (userRole === "Student") {
-      // Do something specific for students
-    } else if (userRole === "ProjectGuide") {
-      // Do something specific for project guides
-    } else if (userRole === "HoD") {
-      // Do something specific for HoDs
-    }
-  
-    return res.status(200).json(new ApiResponse(200, {}, `Role: ${userRole}`));
-  });
-
-  const reviewSubmission = asyncHandler(async (req, res) => {
-
+  if (!localSrsFile) {
+    throw new ApiError(400, "Project file is required");
+  }
+  // Upload SRS file to a cloud storage service
+  const srsFile = await uploadOnCloudinary(localSrsFile);
+  if (!srsFile) {
+    throw new ApiError(400, "Project file is required");
+  }
+  // Save project details to the database
+  const project = await Project.create({
+    projectName,
+    projectDetails,
+    teamMembers,
+    registrationNumbers,
+    srsFile : srsFile,
+    student: req.user._id,
   })
 
-  export {
-    reviewSubmission
+  if (!project) {
+    throw new ApiError(500, "Failed to submit project");
   }
+
+  // Respond with the created project details
+  return res
+    .status(201)
+    .json(new ApiResponse(201, project, "Project submitted successfully"));
+});
+const reviewSubmission = asyncHandler(async (req, res) => {});
+
+export { reviewSubmission, submitProject };
