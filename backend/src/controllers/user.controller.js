@@ -271,6 +271,13 @@ const verifyOtp = asyncHandler(async (req, res) => {
   }
 
   // OTP is valid, proceed with password reset
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new ApiError(400, "User not found");
+  }
+
+  user.forgetPasswordVerified = true;
+  await user.save();
   // Clear the OTP from the store (optional)
   delete otpStore[email];
 
@@ -286,6 +293,9 @@ const resetPassword = asyncHandler(async (req, res) => {
   if (!user) {
     throw new ApiError(404, "User not found");
   }
+  if (!user.forgetPasswordVerified) {
+    throw new ApiError(404, "Not authenticated");
+  }
 
   if (!newPassword || newPassword.length < 6) {
     throw new ApiError(400, "Password must be at least 6 characters long");
@@ -296,7 +306,7 @@ const resetPassword = asyncHandler(async (req, res) => {
 
   // Update the user's password
   user.password = hashedPassword;
-
+  user.forgetPasswordVerified = false; // Reset the flag to false after successful password reset
   // Save without triggering hooks
   await user.save({ validateBeforeSave: false });
 
@@ -314,7 +324,9 @@ const generateEmailOtp = asyncHandler(async (req, res) => {
   if (!user) {
     throw new ApiError(404, "User not found");
   }
-
+  if (user.emailVerified) {
+    throw new ApiError(400, "Email already verified");
+  }
   // Generate a 6-digit OTP
   const otp = generateOTP(6);
 
@@ -384,5 +396,5 @@ export {
   refreshAccessToken,
   changeCurrentPassword,
   generateEmailOtp,
-  verifyEmailOtp
+  verifyEmailOtp,
 };
