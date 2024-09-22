@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { sendStatusEmail } from "../utils/sendEmail.js";
 
 const submitProject = asyncHandler(async (req, res) => {
   const { projectName, projectDetails, teamMembers, registrationNumbers } =
@@ -56,7 +57,10 @@ const updateProjectStatus = asyncHandler(async (req, res) => {
   // console.log(req.body.projectId);
 
   // Find the project in the database
-  const project = await Project.findById(projectId);
+  const project = await Project.findById(projectId).populate(
+    "student",
+    "email"
+  );
   // console.log(project);
 
   if (!project) {
@@ -89,6 +93,13 @@ const updateProjectStatus = asyncHandler(async (req, res) => {
 
   // Save the updated project
   await project.save();
+
+  // Send status email to the student
+  await sendStatusEmail(
+    project.student.email,
+    project.guideStatus,
+    project.hodStatus
+  );
 
   return res
     .status(200)
