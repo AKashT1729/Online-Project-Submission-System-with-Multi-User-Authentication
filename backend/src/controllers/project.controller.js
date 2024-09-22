@@ -12,14 +12,18 @@ const submitProject = asyncHandler(async (req, res) => {
   if (!projectName || !projectDetails || !teamMembers || !registrationNumbers) {
     throw new ApiError(400, "All fields are required");
   }
-  const localSrsFile = req.file?.path;
-    console.log(localSrsFile);
+  // console.log(req.file);
+  
+  const localSrsFile = req.file.path;
+    // console.log(`in controller ${localSrsFile}`);
     
   if (!localSrsFile) {
     throw new ApiError(400, "Project file is required");
   }
   // Upload SRS file to a cloud storage service
   const srsFile = await uploadOnCloudinary(localSrsFile);
+  // console.log("srs File in controlller",srsFile);
+  
   if (!srsFile) {
     throw new ApiError(400, "Project file is required");
   }
@@ -42,6 +46,10 @@ const submitProject = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(201, project, "Project submitted successfully"));
 });
+
+const projectStatus = asyncHandler(async(req, res) => {
+
+})
 const reviewSubmission = asyncHandler(async (req, res) => {});
 
-export { reviewSubmission, submitProject };
+export { reviewSubmission, submitProject,projectStatus };
