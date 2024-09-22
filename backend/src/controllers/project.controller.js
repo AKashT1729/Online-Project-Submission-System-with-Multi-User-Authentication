@@ -13,17 +13,17 @@ const submitProject = asyncHandler(async (req, res) => {
     throw new ApiError(400, "All fields are required");
   }
   // console.log(req.file);
-  
+
   const localSrsFile = req.file.path;
-    // console.log(`in controller ${localSrsFile}`);
-    
+  // console.log(`in controller ${localSrsFile}`);
+
   if (!localSrsFile) {
     throw new ApiError(400, "Project file is required");
   }
   // Upload SRS file to a cloud storage service
   const srsFile = await uploadOnCloudinary(localSrsFile);
   // console.log("srs File in controlller",srsFile);
-  
+
   if (!srsFile) {
     throw new ApiError(400, "Project file is required");
   }
@@ -33,9 +33,9 @@ const submitProject = asyncHandler(async (req, res) => {
     projectDetails,
     teamMembers,
     registrationNumbers,
-    srsFile : srsFile,
+    srsFile: srsFile,
     student: req.user._id,
-  })
+  });
 
   if (!project) {
     throw new ApiError(500, "Failed to submit project");
@@ -47,9 +47,75 @@ const submitProject = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, project, "Project submitted successfully"));
 });
 
-const projectStatus = asyncHandler(async(req, res) => {
+// Controller for updating the project status
+const updateProjectStatus = asyncHandler(async (req, res) => {
+  const { projectId } = req.body; // Get the project ID from the request params
+  const { role } = req.user; // Get the role of the logged-in user (Student, ProjectGuide, HoD)
+  const { guideStatus, hodStatus } = req.body; // Status provided in the request body
 
-})
-const reviewSubmission = asyncHandler(async (req, res) => {});
+  // console.log(req.body.projectId);
 
-export { reviewSubmission, submitProject,projectStatus };
+  // Find the project in the database
+  const project = await Project.findById(projectId);
+  // console.log(project);
+
+  if (!project) {
+    throw new ApiError(404, "Project not found");
+  }
+
+  // Only ProjectGuide can update guideStatus
+  if (role === "ProjectGuide" && guideStatus) {
+    project.guideStatus = guideStatus;
+
+    // Automatically update overall project status based on the guide's decision
+    if (guideStatus === "Rejected") {
+      project.status = "Rejected";
+    } else if (guideStatus === "Approved") {
+      project.status = "Pending HoD Approval";
+    }
+  }
+
+  // Only HoD can update hodStatus
+  if (role === "HoD" && hodStatus) {
+    project.hodStatus = hodStatus;
+
+    // Update overall project status based on HoD's decision
+    if (hodStatus === "Rejected") {
+      project.status = "Rejected";
+    } else if (hodStatus === "Approved") {
+      project.status = "Approved";
+    }
+  }
+
+  // Save the updated project
+  await project.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, project, "Project status updated successfully"));
+});
+
+// Controller for retrieving project status
+const getProjectStatus = asyncHandler(async (req, res) => {
+  const { projectId } = req.body;
+
+  // Find the project in the database
+  const project = await Project.findById(projectId).populate(
+    "student",
+    "fullName email"
+  );
+  // console.log(project);
+
+  if (!project) {
+    throw new ApiError(404, "Project not found");
+  }
+
+  // Respond with the project's current status
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, project, "Project status retrieved successfully")
+    );
+});
+
+export { submitProject, getProjectStatus, updateProjectStatus };
