@@ -265,7 +265,7 @@ const downloadProjectSRS = asyncHandler(async (req, res) => {
 
   // If stored locally, send the file
   const filePath = path.resolve(srsFileUrl);
-  
+
   // Check if file exists
   if (!fs.existsSync(filePath)) {
     throw new ApiError(404, "SRS file not found");
@@ -287,5 +287,5 @@ export {
   getProjectById,
   deleteProject,
   updateProject,
-  downloadProjectSRS
+  downloadProjectSRS,
 };
