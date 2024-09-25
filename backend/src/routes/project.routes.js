@@ -2,6 +2,8 @@ import { Router } from "express";
 import { checkRole } from "../middlewares/role.middlewares.js";
 import { verifyJWT } from "../middlewares/auth.middlewares.js";
 import {
+  getProjectById,
+  getProjectList,
   getProjectStatus,
   submitProject,
   updateProjectStatus,
@@ -18,4 +20,7 @@ router
   .patch(verifyJWT, checkRole("ProjectGuide", "HoD"), updateProjectStatus);
 
 router.route("/project-status").get(verifyJWT,getProjectStatus)
+
+router.route("/projects").get(verifyJWT,checkRole("ProjectGuide", "HoD"),getProjectList)
+router.route("/projects/:id").get(verifyJWT,checkRole("ProjectGuide", "HoD"),getProjectById)
 export default router;

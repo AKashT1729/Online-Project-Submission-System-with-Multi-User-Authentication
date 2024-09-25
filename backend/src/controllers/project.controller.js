@@ -47,6 +47,54 @@ const submitProject = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(201, project, "Project submitted successfully"));
 });
+// Controller to get the list of projects with optional filtering
+const getProjectList = asyncHandler(async (req, res) => {
+  const { guideStatus, hodStatus } = req.query;
+
+  // Create a query object
+  let query = {};
+
+  // If guideStatus is provided, add it to the query
+  if (guideStatus) {
+    query.guideStatus = guideStatus;
+  }
+
+  // If hodStatus is provided, add it to the query
+  if (hodStatus) {
+    query.hodStatus = hodStatus;
+  }
+
+  // Fetch projects based on the query
+  const projects = await Project.find(query).populate("student", "fullName email");
+
+  // Check if projects were found
+  if (!projects || projects.length === 0) {
+    return res.status(404).json(new ApiResponse(404, null, "No projects found"));
+  }
+
+  // Return the list of projects
+  return res
+    .status(200)
+    .json(new ApiResponse(200, projects, "Projects retrieved successfully"));
+});
+
+// Controller to get a specific project by ID
+const getProjectById = asyncHandler(async (req, res) => {
+  const { _id } = req.body;
+
+  // Find project by ID
+  const project = await Project.findById(_id).populate("student", "fullName email");
+
+  // Check if project was found
+  if (!project) {
+    return res.status(404).json(new ApiResponse(404, null, "Project not found"));
+  }
+
+  // Return the project details
+  return res
+    .status(200)
+    .json(new ApiResponse(200, project, "Project retrieved successfully"));
+});
 
 // Controller for updating the project status
 const updateProjectStatus = asyncHandler(async (req, res) => {
@@ -129,4 +177,4 @@ const getProjectStatus = asyncHandler(async (req, res) => {
     );
 });
 
-export { submitProject, getProjectStatus, updateProjectStatus };
+export { submitProject, getProjectStatus, updateProjectStatus ,getProjectList,getProjectById};

@@ -21,6 +21,7 @@ const sendOtpEmail = async (email, otp) => {
   await transporter.sendMail(mailOptions);
 };
 
+//Send Project Status
 const sendStatusEmail = async (email, guideStatus, hodStatus) => {
   const mailOptions = {
     from: process.env.GMAIL_USER,
