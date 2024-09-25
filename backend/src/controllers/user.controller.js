@@ -389,6 +389,12 @@ const verifyEmailOtp = asyncHandler(async (req, res) => {
 });
 
 
+const getCurrentuser = asyncHandler(async (req, res) => {
+  return res
+    .status(200)
+    .json(new ApiResponse(200, req.user, "Current user fetched successfully"));
+});
+
 export {
   registerUser,
   logingUser,
@@ -400,4 +406,5 @@ export {
   changeCurrentPassword,
   generateEmailOtp,
   verifyEmailOtp,
+  getCurrentuser
 };

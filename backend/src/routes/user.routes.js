@@ -3,6 +3,7 @@ import {
   changeCurrentPassword,
   forgetPassword,
   generateEmailOtp,
+  getCurrentuser,
   logingUser,
   logOutUser,
   refreshAccessToken,
@@ -26,7 +27,7 @@ router.route("/changePassword").post(verifyJWT,changeCurrentPassword)
 router.route("/forgetPassword").post(forgetPassword);
 router.route("/verifyOtp").post(verifyOtp);
 router.route("/resetPassword").post(resetPassword);
-
+router.route("/current-user").get(verifyJWT, getCurrentuser);
 router.route("/generate-otp").post(verifyJWT, generateEmailOtp);
 router.route("/verify-otp").post(verifyJWT, verifyEmailOtp);
 
