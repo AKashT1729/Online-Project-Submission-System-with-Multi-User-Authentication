@@ -244,6 +244,40 @@ const getProjectStatus = asyncHandler(async (req, res) => {
       new ApiResponse(200, project, "Project status retrieved successfully")
     );
 });
+// Controller to download SRS file (Only for the "ProjectGuide", "HoD")
+const downloadProjectSRS = asyncHandler(async (req, res) => {
+  const { _id } = req.body;
+
+  // Find the project by ID
+  const project = await Project.findById(_id);
+
+  if (!project) {
+    throw new ApiError(404, "Project not found");
+  }
+
+  // Path to the SRS file (assuming it’s a URL or file path)
+  const srsFileUrl = project.srsFile;
+
+  // If the file is hosted on a cloud service (Cloudinary), redirect to download it
+  if (srsFileUrl.startsWith("http")) {
+    return res.redirect(srsFileUrl);
+  }
+
+  // If stored locally, send the file
+  const filePath = path.resolve(srsFileUrl);
+  
+  // Check if file exists
+  if (!fs.existsSync(filePath)) {
+    throw new ApiError(404, "SRS file not found");
+  }
+
+  // Send the file to the client
+  res.download(filePath, "SRS.zip", (err) => {
+    if (err) {
+      throw new ApiError(500, "Failed to download file");
+    }
+  });
+});
 
 export {
   submitProject,
@@ -253,4 +287,5 @@ export {
   getProjectById,
   deleteProject,
   updateProject,
+  downloadProjectSRS
 };

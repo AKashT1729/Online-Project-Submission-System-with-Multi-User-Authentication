@@ -3,6 +3,7 @@ import { checkRole } from "../middlewares/role.middlewares.js";
 import { verifyJWT } from "../middlewares/auth.middlewares.js";
 import {
   deleteProject,
+  downloadProjectSRS,
   getProjectById,
   getProjectList,
   getProjectStatus,
@@ -32,5 +33,5 @@ router
 
 router.route("/deleteProject").delete(verifyJWT, deleteProject);
 router.route("/updateProject").put(verifyJWT, updateProject);
-
+router.route("/projects/:id/download").get(verifyJWT, checkRole("ProjectGuide", "HoD"),downloadProjectSRS)
 export default router;
