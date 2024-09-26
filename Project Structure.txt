@@ -52,40 +52,53 @@ npm install express mongoose jsonwebtoken bcryptjs multer nodemailer cors dotenv
 Frontend (React.js + Tailwind CSS)
 **1. Project Structure:
 
-arduino
+
 Copy code
-frontend/
-│
+
+my-vite-app/
 ├── public/
-│   ├── index.html
 │   └── favicon.ico
-│
 ├── src/
+│   ├── api/
+│   │   └── api.js             # API requests (for interacting with backend)
+│   ├── assets/
+│   │   └── images/            # Static assets (images, etc.)
 │   ├── components/
-│   │   ├── Auth/
-│   │   │   ├── Login.js
-│   │   │   └── Register.js
-│   │   ├── Dashboard/
-│   │   │   ├── StudentDashboard.js
-│   │   │   └── GuideDashboard.js
-│   │   ├── Project/
-│   │   │   ├── ProjectForm.js
-│   │   │   └── ProjectList.js
-│   │   └── Layout/
-│   │       └── Navbar.js
+│   │   ├── Header.jsx         # Common Header
+│   │   ├── Footer.jsx         # Common Footer
+│   │   ├── ProjectCard.jsx    # Reusable Project card component
+│   │   ├── Button.jsx         # Reusable Button component
+│   │   └── ...                # Other reusable components
+│   ├── context/
+│   │   └── AuthContext.jsx    # Authentication context
+│   ├── hooks/
+│   │   └── useAuth.js         # Custom hook for authentication
+│   ├── layouts/
+│   │   └── MainLayout.jsx     # Main layout (header/footer wrapper)
 │   ├── pages/
-│   │   ├── Home.js
-│   │   ├── NotFound.js
-│   │   └── Profile.js
+│   │   ├── HomePage.jsx       # Home page
+│   │   ├── LoginPage.jsx      # Login page
+│   │   ├── RegisterPage.jsx   # Register page
+│   │   ├── ProjectListPage.jsx # List of projects (for student/guide/HoD)
+│   │   ├── ProjectDetailsPage.jsx # Single project details
+│   │   ├── SubmitProjectPage.jsx # Project submission page for students
+│   │   └── ...                # Additional pages
+│   ├── router/
+│   │   └── AppRouter.jsx      # React Router for routing pages
+│   ├── services/
+│   │   └── authService.js     # Service for auth-related operations
+│   │   └── projectService.js  # Service for project-related API calls
+│   ├── styles/
+│   │   ├── main.css           # Global styles
+│   │   └── variables.css      # CSS variables (colors, typography)
 │   ├── utils/
-│   │   └── api.js         # API calls
-│   ├── App.js
-│   └── index.js
-│
-├── tailwind.config.js
-├── postcss.config.js
-├── .env
-└── package.json
+│   │   └── helpers.js         # Utility/helper functions
+│   ├── App.jsx                # Main application component
+│   ├── main.jsx               # Vite entry point
+│   └── vite.config.js         # Vite configuration file
+├── index.html                 # Main HTML file
+├── package.json               # Dependencies and scripts
+└── README.md                  # Project documentation
 **2. Packages:
 
 React: react - Frontend library
