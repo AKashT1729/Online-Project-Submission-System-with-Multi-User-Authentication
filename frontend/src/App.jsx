@@ -14,11 +14,12 @@ function App() {
     <>
      <Router>
       <Routes>
+      <Route path='/' element={<Login/>} />
         <Route path="/register" element={<Register />} />
         <Route path='/login' element={<Login/>} />
-        <Route path="/dashboard/student" element={<StudentDashboard/>} />
-        <Route path="/dashboard/project-guide" element={<ProjectGuideDashboard/>} />
-        <Route path="/dashboard/hod" element={<HoDDashboard/>} />
+        <Route path="/student-dashboard" element={<StudentDashboard />} />
+        <Route path="/guide-dashboard" element={<ProjectGuideDashboard />} />
+        <Route path="/hod-dashboard" element={<HoDDashboard />} />
       </Routes>
     </Router>
     </>

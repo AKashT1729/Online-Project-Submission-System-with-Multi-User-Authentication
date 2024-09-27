@@ -123,7 +123,7 @@ const Register = () => {
                 Select your role
               </option>
               <option value="Student">Student</option>
-              <option value="Project Guide">Project Guide</option>
+              <option value="ProjectGuide">Project Guide</option>
               <option value="HoD">HoD</option>
             </select>
           </div>
