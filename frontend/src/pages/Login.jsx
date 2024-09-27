@@ -31,21 +31,33 @@ const Login = () => {
         "http://localhost:8000/api/v1/users/logIn",
         formData
       );
-      
-      setSuccessMessage("User logged in successfully");
-      // console.log(response);
-      // console.log("Role from response:", response.data.data.role);
-      
-      // Redirect to the appropriate dashboard based on role
-      const userRole = response.data.data.user?.role || response.data.data.role;
-      // console.log("Logged-in user role:", userRole);
+       // Store access token in localStorage or cookies
+       const { accessToken } = response.data.data;
+      //  console.log(accessToken);
+       
+       localStorage.setItem("accessToken", accessToken);
 
-      if (userRole === "Student") {
-        navigate("/student-dashboard");
-      } else if (userRole === "ProjectGuide") {
-        navigate("/guide-dashboard");
-      } else if (userRole === "HoD") {
-        navigate("/hod-dashboard");
+      setSuccessMessage("User logged in successfully");
+
+      const user = response.data.data.user || response.data.data; // Handle response structure
+      const userRole = user.role;
+      const isEmailVerified = user.emailVerified;
+
+      localStorage.setItem("role", userRole);
+      // Check if the email is verified
+      if (!isEmailVerified) {
+        // Store user details in local storage (or context) for OTP verification
+        localStorage.setItem("email", user.email);
+        navigate("/generate-otp"); // Redirect to EmailVerification page
+      } else {
+        // Redirect to the appropriate dashboard based on role
+        if (userRole === "Student") {
+          navigate("/student-dashboard");
+        } else if (userRole === "ProjectGuide") {
+          navigate("/guide-dashboard");
+        } else if (userRole === "HoD") {
+          navigate("/hod-dashboard");
+        }
       }
     } catch (error) {
       // Show appropriate error messages
