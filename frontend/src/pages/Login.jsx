@@ -29,7 +29,9 @@ const Login = () => {
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/users/logIn",
-        formData
+        formData,{
+          withCredentials: true, // Make sure cookies are set
+        }
       );
        // Store access token in localStorage or cookies
        const { accessToken } = response.data.data;
