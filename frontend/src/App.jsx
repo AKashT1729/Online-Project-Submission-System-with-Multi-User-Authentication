@@ -7,6 +7,9 @@ import ProjectGuideDashboard from './Dashboard/ProjectGuideDashboard';
 import HoDDashboard from './Dashboard/HoDDashboard';
 import EmailVerification from './components/EmailVerification';
 import VerifyButton from './components/VerifyButton';
+import ForgotPassword from './components/ForgotPassword';
+import OtpForm from './components/OtpForm';
+import ResetPassword from './components/ResetPassword';
 
 
 function App() {
@@ -24,6 +27,9 @@ function App() {
         <Route path="/hod-dashboard" element={<HoDDashboard />} />
         <Route path="/generate-otp" element={<VerifyButton/>} />
         <Route path="/email-verification" element={<EmailVerification/>} />
+        <Route path="/forgot-password" element={<ForgotPassword/>} />
+        <Route path="/otp-form" element={<OtpForm/>} />
+        <Route path='/reset-password' element={<ResetPassword/>}/>
       </Routes>
     </Router>
     </>

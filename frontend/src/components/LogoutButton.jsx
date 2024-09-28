@@ -15,7 +15,7 @@ const LogoutButton = () => {
 
       // Clear access token from localStorage if it's stored there
       localStorage.removeItem("accessToken");
-
+      localStorage.clear();
       // Redirect to the login page
       navigate("/login");
     } catch (error) {
