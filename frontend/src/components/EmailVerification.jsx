@@ -1,16 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const EmailVerification = () => {
   const [otp, setOtp] = useState("");
+  const [user, setUser] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
-  // Get the user's email from localStorage/session or pass it as a prop
-  const email = localStorage.getItem("email"); // Replace with actual value
-  //   console.log(email);
+  // Load user data from localStorage when the component mounts
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser); // Set the user state
+    }
+  }, []);
+
+  // Ensure user is not null before trying to access the email property
+  const email = user?.email;
+console.log(email);
 
   const handleOtpChange = (e) => {
     setOtp(e.target.value);
@@ -37,7 +47,7 @@ const EmailVerification = () => {
 
       setSuccessMessage("Email verified successfully!");
     //   console.log(response.data);
-      const userRole = localStorage.getItem("role")
+      const userRole = user?.role
       // Navigate to the user dashboard after successful verification
       if (userRole === "Student") {
         navigate("/student-dashboard");

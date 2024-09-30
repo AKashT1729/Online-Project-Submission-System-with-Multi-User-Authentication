@@ -5,12 +5,11 @@ import { Link, useNavigate } from "react-router-dom";
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
-    phoneNumber: "",
     password: "",
   });
-
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -25,52 +24,57 @@ const Login = () => {
     e.preventDefault();
     setErrorMessage("");
     setSuccessMessage("");
+    setIsLoading(true);
+
+    // Validate input
+    if (!formData.email || !formData.password) {
+      setErrorMessage("Please enter both email/phone and password.");
+      setIsLoading(false);
+      return;
+    }
+// console.log(formData);
 
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/users/logIn",
-        formData,{
-          withCredentials: true, // Make sure cookies are set
-        }
+        { ...formData },
+        { withCredentials: true }
       );
-       // Store access token in localStorage or cookies
-       const { accessToken } = response.data.data;
-      //  console.log(accessToken);
-       
-       localStorage.setItem("accessToken", accessToken);
 
-      setSuccessMessage("User logged in successfully");
+      const { accessToken, user } = response.data.data;
+      const { role, emailVerified } = user;
+    
+      // Store access token and user details securely
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("user", JSON.stringify(user));
 
-      const user = response.data.data.user || response.data.data; // Handle response structure
-      const userRole = user.role;
-      const isEmailVerified = user.emailVerified;
+      setSuccessMessage("User logged in successfully.");
 
-      localStorage.setItem("role", userRole);
-      // Check if the email is verified
-      if (!isEmailVerified) {
-        // Store user details in local storage (or context) for OTP verification
-        localStorage.setItem("email", user.email);
-        navigate("/generate-otp"); // Redirect to EmailVerification page
-      } else {
-        // Redirect to the appropriate dashboard based on role
-        if (userRole === "Student") {
-          navigate("/student-dashboard");
-        } else if (userRole === "ProjectGuide") {
-          navigate("/guide-dashboard");
-        } else if (userRole === "HoD") {
-          navigate("/hod-dashboard");
-        }
+      // console.log("User Role:", role);  // Debug log for role
+      // console.log("Email Verified:", emailVerified);
+
+      // Navigate based on email verification and role
+      if (!emailVerified) {
+        navigate("/generate-otp");
+      } else if (role === "Student") {
+        navigate("/student-dashboard");
+      } else if (role === "ProjectGuide") {
+        navigate("/guide-dashboard");
+      } else if (role === "HoD") {
+        navigate("/hod-dashboard");
       }
+
     } catch (error) {
-      // Show appropriate error messages
+      setIsLoading(false);
       if (error.response?.status === 400) {
         setErrorMessage("Incorrect password or user does not exist.");
       } else {
         setErrorMessage(
-          error.response?.data?.message ||
-            "Something went wrong. Please try again."
+          error.response?.data?.message || "Something went wrong. Please try again."
         );
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -83,27 +87,30 @@ const Login = () => {
           <div className="mb-4 text-red-500 text-center">{errorMessage}</div>
         )}
         {successMessage && (
-          <div className="mb-4 text-green-500 text-center">
-            {successMessage}
-          </div>
+          <div className="mb-4 text-green-500 text-center">{successMessage}</div>
         )}
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700">Email or Phone Number</label>
+            <label className="block text-gray-700" htmlFor="emailOrPhone">
+              Email or Phone Number
+            </label>
             <input
               type="text"
               name="email"
-              value={formData.email || formData.phoneNumber}
+              value={formData.email}
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
               placeholder="Enter your email or phone number"
               required
+              aria-label="Email or phone number"
             />
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700">Password</label>
+            <label className="block text-gray-700" htmlFor="password">
+              Password
+            </label>
             <input
               type="password"
               name="password"
@@ -112,14 +119,16 @@ const Login = () => {
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
               placeholder="Enter your password"
               required
+              aria-label="Password"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition duration-300"
+            className={`w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition duration-300 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={isLoading}
           >
-            Log In
+            {isLoading ? "Logging in..." : "Log In"}
           </button>
         </form>
 

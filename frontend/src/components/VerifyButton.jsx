@@ -1,13 +1,22 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function VerifyButton() {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [user ,setUser] = useState(null)
   const navigate = useNavigate();
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser); // Set the user state
+    }
+  }, []);
 
-  const email = localStorage.getItem("email");
+  // Ensure user is not null before trying to access the email property
+  const email = user?.email;
 
   const handleVerifySubmit = async (e) => {
     e.preventDefault();
