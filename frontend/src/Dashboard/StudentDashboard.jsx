@@ -1,47 +1,36 @@
-import React, { useEffect, useState } from 'react';
-import LogoutButton from '../components/LogoutButton';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import Navbar from "../Layout/Navbar";
+import { useNavigate } from "react-router-dom";
+import ProfileSection from "../Layout/ProfileSection";
 
-function StudentDashboard() {
+const StudentDashboard = ({ user }) => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch user from localStorage
-    const storedUser = localStorage.getItem("user");
-
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-
-      // Check if the user is not a Student
-      if (parsedUser.role !== "Student") {
-        navigate("/login"); // Redirect if not a Student
-      }
+    // Check if user exists and has the right role
+    if (!user) {
+      navigate("/login"); // Redirect if not logged in
+    } else if (user.role !== "Student") {
+      navigate("/login"); // Redirect if the role is not ProjectGuide
     } else {
-      // If no user is stored, redirect to login
-      navigate("/login");
+      setLoading(false); // Stop loading if user is valid
     }
-
-    setLoading(false); // Stop loading after checking
-  }, [navigate]);
+  }, [user, navigate]);
 
   if (loading) {
-    return <div>Loading Student Dashboard...</div>; // Improved loading experience
-  }
-
-  if (!user) {
-    return <div>Redirecting to login...</div>; // If user data is not available
+    return <div>Loading...</div>; // Display a loading indicator while checking user
   }
 
   return (
-    <div>
-      <h1>Welcome to the {user.role} Dashboard!</h1>
-      <p>Welcome, {user.fullName}!</p>
-      <LogoutButton />
-    </div>
+    <>
+      <Navbar user={user} />
+      <div className="h-vh">
+        <ProfileSection user={user} />
+      </div>
+      
+    </>
   );
-}
+};
 
 export default StudentDashboard;

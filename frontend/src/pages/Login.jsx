@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Login = ({setUser }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -47,7 +47,7 @@ const Login = () => {
       // Store access token and user details securely
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("user", JSON.stringify(user));
-
+      setUser(user);
       setSuccessMessage("User logged in successfully.");
 
       // console.log("User Role:", role);  // Debug log for role
