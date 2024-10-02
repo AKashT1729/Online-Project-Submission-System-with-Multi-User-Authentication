@@ -13,25 +13,32 @@ cloudinary.config({
 // Define an asynchronous function to upload files to Cloudinary
 const uploadOnCloudinary = async (localSrsFile) => {
   try {
-    // Check if localFilePath is provided
-    console.log(`in cloudinary ${localSrsFile}`);
-    
     if (!localSrsFile) return null;
 
-    // Upload the file to Cloudinary and get the upload result
+    console.log(`Uploading file in cloudinary: ${localSrsFile}`);
+     console.log(typeof(localSrsFile));
+      
+    // Upload file to Cloudinary
     const uploadResult = await cloudinary.uploader.upload(localSrsFile, {
-      resource_type: "auto", // Resource type for upload (auto-detect)
+      resource_type: "auto",
+      timeout: 60000, // Adjust timeout as needed
     });
-  //  console.log("File uploaded on Cloudinary: ", uploadResult.url);
-    // Log the upload success and return the uploaded file URL
-    // console.log("File uploaded on Cloudinary: ", uploadResult.url);
+
+    console.log("File successfully uploaded to Cloudinary:", uploadResult.url);
+
+    // After successful upload, delete the local file
     fs.unlinkSync(localSrsFile);
     return uploadResult.url;
   } catch (error) {
-    // Handle upload errors
-    fs.unlinkSync(localSrsFile); // Remove the locally saved temporary file as the upload failed
-    console.log(error);
-    return null; // Return null in case of upload failure
+    // If an error occurs, log it
+    console.error("Error during file upload:", error.message);
+
+    // Ensure the local file is deleted even in case of an error
+    if (fs.existsSync(localSrsFile)) {
+      fs.unlinkSync(localSrsFile);
+    }
+
+    return null; // Return null in case of failure
   }
 };
 

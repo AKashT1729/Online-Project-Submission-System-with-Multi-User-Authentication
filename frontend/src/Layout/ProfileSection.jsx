@@ -5,6 +5,7 @@ const ProfileSection = ({ user }) => {
   if (!user) {
     return <div>Loading...</div>; // Show loading if no user data
   }
+// console.log(user);
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md w-64 text-center h-dvh">

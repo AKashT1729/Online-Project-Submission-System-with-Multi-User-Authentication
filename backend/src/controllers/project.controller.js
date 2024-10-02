@@ -16,7 +16,7 @@ const submitProject = asyncHandler(async (req, res) => {
   // console.log(req.file);
 
   const localSrsFile = req.file.path;
-  // console.log(`in controller ${localSrsFile}`);
+   console.log(`in controller ${localSrsFile}`);
 
   if (!localSrsFile) {
     throw new ApiError(400, "Project file is required");
