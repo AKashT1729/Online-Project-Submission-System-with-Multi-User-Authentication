@@ -4,9 +4,9 @@ import { verifyJWT } from "../middlewares/auth.middlewares.js";
 import {
   deleteProject,
   downloadProjectSRS,
+  getAllProjects,
   getProjectById,
   getProjectList,
-  getProjectStatus,
   submitProject,
   updateProject,
   updateProjectStatus,
@@ -22,7 +22,7 @@ router
   .route("/review-submission")
   .patch(verifyJWT, checkRole("ProjectGuide", "HoD"), updateProjectStatus);
 
-router.route("/project-status").get(verifyJWT, getProjectStatus);
+router.route("/project").get(verifyJWT, getAllProjects);
 
 router
   .route("/projects")

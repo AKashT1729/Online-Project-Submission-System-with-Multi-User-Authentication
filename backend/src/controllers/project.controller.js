@@ -222,26 +222,20 @@ const updateProjectStatus = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, project, "Project status updated successfully"));
 });
 
-// Controller for retrieving project status
-const getProjectStatus = asyncHandler(async (req, res) => {
-  const { projectId } = req.body;
+const getAllProjects = asyncHandler(async (req, res) => {
+  // Retrieve all projects from the database and populate student details
+  const projects = await Project.find({}).populate("student", "fullName email");
 
-  // Find the project in the database
-  const project = await Project.findById(projectId).populate(
-    "student",
-    "fullName email"
-  );
-  // console.log(project);
-
-  if (!project) {
-    throw new ApiError(404, "Project not found");
+  // Check if projects exist
+  if (!projects || projects.length === 0) {
+    throw new ApiError(404, "No projects found");
   }
 
-  // Respond with the project's current status
+  // Respond with the list of all projects and their current status
   return res
     .status(200)
     .json(
-      new ApiResponse(200, project, "Project status retrieved successfully")
+      new ApiResponse(200, projects, "All projects retrieved successfully")
     );
 });
 // Controller to download SRS file (Only for the "ProjectGuide", "HoD")
@@ -281,7 +275,7 @@ const downloadProjectSRS = asyncHandler(async (req, res) => {
 
 export {
   submitProject,
-  getProjectStatus,
+  getAllProjects,
   updateProjectStatus,
   getProjectList,
   getProjectById,
