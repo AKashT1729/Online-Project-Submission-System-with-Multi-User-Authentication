@@ -31,7 +31,7 @@ const ProjectGuideDashboard = ({ user }) => {
         <ProfileSection user={user} />
       </div>
       <div className="">
-        <ProjectList/>
+        <ProjectList  user={user}/>
       </div>
       </div>
       

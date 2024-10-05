@@ -166,7 +166,7 @@ const getProjectById = asyncHandler(async (req, res) => {
 
 // Controller for updating the project status
 const updateProjectStatus = asyncHandler(async (req, res) => {
-  const { projectId } = req.body; // Get the project ID from the request params
+  const { projectId } = req.body; 
   const { role } = req.user; // Get the role of the logged-in user (Student, ProjectGuide, HoD)
   const { guideStatus, hodStatus } = req.body; // Status provided in the request body
 

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios"; // Import axios for API calls
 
 const ProjectDetails = ({ project, user, onBack }) => {
   const [teamMembers, setTeamMembers] = useState([]); // State for team members
   const [registrationNumbers, setRegistrationNumbers] = useState([]); // State for registration numbers
+  const [error, setError] = useState(null); // Error handling state
 
   const getStatusStyles = (status) => {
     switch (status) {
@@ -41,6 +43,31 @@ const ProjectDetails = ({ project, user, onBack }) => {
     }
   }, [project]);
 
+  const handleStatusUpdate = async (status) => {
+    try {
+      const updateData = {
+        projectId: project._id,
+        [user.role === "ProjectGuide" ? "guideStatus" : "hodStatus"]: status,
+      };
+
+      const response = await axios.patch(
+        "http://localhost:8000/api/v1/projects/review-submission",
+        updateData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+
+      // Optionally, you can update the local project state with the new status
+      // But assuming the parent component will handle the re-fetch or refresh
+      alert(`Project ${status} successfully!`);
+    } catch (error) {
+      setError(error.response?.data?.message || "Failed to update status");
+    }
+  };
+
   if (!project) {
     return <div>No project details found</div>;
   }
@@ -53,6 +80,7 @@ const ProjectDetails = ({ project, user, onBack }) => {
       >
         Back to Project List
       </button>
+
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold">{project.projectName}</h2>
         <p className="text-gray-600 mt-2 mb-4">{project.projectDetails}</p>
@@ -92,6 +120,24 @@ const ProjectDetails = ({ project, user, onBack }) => {
           </div>
         </div>
 
+        {/* Approve/Reject Buttons for ProjectGuide and HoD */}
+        {["HoD", "ProjectGuide"].includes(user.role) && (
+          <div className="mt-4 flex space-x-4">
+            <button
+              onClick={() => handleStatusUpdate("Approved")}
+              className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-300"
+            >
+              Approve Project
+            </button>
+            <button
+              onClick={() => handleStatusUpdate("Rejected")}
+              className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition duration-300"
+            >
+              Reject Project
+            </button>
+          </div>
+        )}
+
         {/* Download SRS File */}
         {["HoD", "ProjectGuide"].includes(user.role) && project.srsFile && (
           <div className="mt-4">
@@ -104,6 +150,8 @@ const ProjectDetails = ({ project, user, onBack }) => {
             </a>
           </div>
         )}
+
+        {error && <div className="text-red-500 mt-4">{error}</div>}
       </div>
     </div>
   );
