@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../Layout/Navbar";
 import { useNavigate } from "react-router-dom";
 import ProfileSection from "../Layout/ProfileSection";
-import ProjectDetails from "../components/ProjectDetails";
+
+import StudentProjectDetails from "../pages/StudentProjectDetails";
 
 const StudentDashboard = ({ user }) => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const StudentDashboard = ({ user }) => {
         <ProfileSection user={user} />
       </div>
       <div className="">
-        <ProjectDetails user={user}/>
+        <StudentProjectDetails user={user}/>
       </div>
       </div>
      

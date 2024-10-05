@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../Layout/Navbar";
 import { useNavigate } from "react-router-dom";
 import ProfileSection from "../Layout/ProfileSection";
+import ProjectList from "../pages/ProjectList";
 
 const ProjectGuideDashboard = ({ user }) => {
   const navigate = useNavigate();
@@ -25,8 +26,13 @@ const ProjectGuideDashboard = ({ user }) => {
   return (
     <>
       <Navbar user={user} />
-      <div className="h-vh">
+      <div className="h-dvh flex">
+         <div className="h-vh">
         <ProfileSection user={user} />
+      </div>
+      <div className="">
+        <ProjectList/>
+      </div>
       </div>
       
     </>

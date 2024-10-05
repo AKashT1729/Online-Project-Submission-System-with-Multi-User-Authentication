@@ -13,6 +13,7 @@ import ForgotPassword from '../components/ForgotPassword'
 import OtpForm from '../components/OtpForm'
 import ResetPassword from '../components/ResetPassword'
 import SubmitProject from '../pages/SubmitProject'
+import ProjectList from '../pages/ProjectList';
 const AppRouter = () => {
 
   const [user, setUser] = useState(null);
@@ -39,6 +40,7 @@ const AppRouter = () => {
         <Route path='/otp-form' element={<OtpForm />} />
         <Route path='/reset-password' element={<ResetPassword />} />
         <Route path='/submit-project' element={<SubmitProject/>} />
+
       </Routes>
     </Router>
   );
