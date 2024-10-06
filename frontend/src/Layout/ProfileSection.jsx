@@ -30,12 +30,7 @@ const ProfileSection = ({ user }) => {
           Upload Your Project
         </Link>
       ) : (
-        <Link
-          to="/project-list"
-          className="block bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-300"
-        >
-          Project List
-        </Link>
+       ""
       )}
     </div>
   );

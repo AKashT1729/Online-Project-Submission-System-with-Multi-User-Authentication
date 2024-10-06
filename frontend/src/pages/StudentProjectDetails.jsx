@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import Modal from "react-modal"; // Importing Modal from react-modal
 
 const StudentProjectDetails = ({ user }) => {
   const [project, setProject] = useState(null); // State for holding a single project object
@@ -7,37 +9,19 @@ const StudentProjectDetails = ({ user }) => {
   const [error, setError] = useState(null); // State for handling errors
   const [teamMembers, setTeamMembers] = useState([]); // State for team members
   const [registrationNumbers, setRegistrationNumbers] = useState([]); // State for registration numbers
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Modal state
+  const [editForm, setEditForm] = useState({}); // Form state for editing project
 
   const getStatusStyles = (status) => {
     switch (status) {
       case "Approved":
-        return {
-          bgColor: "bg-green-500", // Green for Approved
-          borderColor: "border-green-200", // Darker green for border
-          hoverBgColor: "hover:bg-green-200", // Darker green on hover
-          hoverBorderColor: "hover:border-green-500", // Lighter green on hover
-        };
+        return "bg-green-100 border-green-300 text-green-600";
       case "Rejected":
-        return {
-          bgColor: "bg-red-500", // Red for Rejected
-          borderColor: "border-red-200", // Darker red for border
-          hoverBgColor: "hover:bg-red-200", // Darker red on hover
-          hoverBorderColor: "hover:border-red-500", // Lighter red on hover
-        };
+        return "bg-red-100 border-red-300 text-red-600";
       case "Pending":
-        return {
-          bgColor: "bg-orange-500", // Orange for Pending
-          borderColor: "border-orange-200", // Darker orange for border
-          hoverBgColor: "hover:bg-orange-200", // Darker orange on hover
-          hoverBorderColor: "hover:border-orange-500", // Lighter orange on hover
-        };
+        return "bg-orange-100 border-orange-300 text-orange-600";
       default:
-        return {
-          bgColor: "bg-gray-200", // Default background if none matches
-          borderColor: "border-gray-400", // Default border color
-          hoverBgColor: "hover:bg-gray-200", // Darker gray on hover
-          hoverBorderColor: "hover:border-gray-400", // Lighter gray on hover
-        };
+        return "bg-gray-100 border-gray-300 text-gray-600";
     }
   };
 
@@ -55,6 +39,73 @@ const StudentProjectDetails = ({ user }) => {
     } catch (error) {
       console.error("Error fetching projects:", error);
       throw error;
+    }
+  };
+
+  const handleDeleteProject = async () => {
+    if (window.confirm("Are you sure you want to delete this project?")) {
+      try {
+        await axios.delete(
+          `http://localhost:8000/api/v1/projects/deleteProject`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+            data: { _id: project._id }, // Use `data` to send the body in a DELETE request
+          }
+        );
+        alert("Project deleted successfully!");
+        setProject(null); // Clear the project after deletion
+      } catch (error) {
+        console.error("Error deleting project:", error);
+        alert("Failed to delete the project.");
+      }
+    }
+  };
+  
+
+  const handleEditProject = () => {
+    // Populate the form with the current project data
+    setEditForm({
+      projectName: project.projectName,
+      projectDetails: project.projectDetails,
+      teamMembers: teamMembers.join(", "), // Convert array to comma-separated string
+      registrationNumbers: registrationNumbers.join(", "), // Convert array to string
+    });
+    setIsEditModalOpen(true); // Open modal
+  };
+
+  const handleEditFormChange = (e) => {
+    setEditForm({ ...editForm, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmitEdit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/api/v1/projects/updateProject`,
+        {
+          _id: project._id,
+          projectName: editForm.projectName,
+          projectDetails: editForm.projectDetails,
+          teamMembers: editForm.teamMembers.split(",").map((member) => member.trim()), // Convert back to array
+          registrationNumbers: editForm.registrationNumbers
+            .split(",")
+            .map((num) => num.trim()), // Convert back to array
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+
+      alert("Project updated successfully!");
+      setProject(response.data.data); // Update project state
+      setIsEditModalOpen(false); // Close modal
+    } catch (error) {
+      console.error("Error updating project:", error);
+      alert("Failed to update the project.");
     }
   };
 
@@ -88,7 +139,7 @@ const StudentProjectDetails = ({ user }) => {
             .map((member) => member.trim());
 
           setTeamMembers(teamMembersArray); // Set the converted array
-          setRegistrationNumbers(registrationNumbersArray); // Assuming registrationNumbers is already an array
+          setRegistrationNumbers(registrationNumbersArray); // Set registration numbers array
         } else {
           console.log("No matching project found.");
         }
@@ -116,81 +167,150 @@ const StudentProjectDetails = ({ user }) => {
   if (!project) {
     return <div>No project details found</div>;
   }
-//   console.log(project);
-  // console.log(registrationNumbers);
+
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Project Details</h1>
+    <div className="container mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6">Project Details</h1>
 
       {/* Project Information */}
-      <div className="bg-white p-6 rounded-lg shadow-md mb-4 w-full">
-        <div>
-          <h2 className="text-xl font-semibold mb-0">{project.projectName}</h2>
-          <p className="text-sm font-semibold text-gray-500 mb-3 pt-0">
-            (Project Name)
-          </p>
-          <h3 className="font-semibold">Project Description</h3>
-          <p className="text-gray-600 font-semibold mb-2 w-full">
-            {project.projectDetails}
-          </p>
+      <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-2xl font-semibold">{project.projectName}</h2>
+            <p className="text-gray-500">(Project Name)</p>
+          </div>
+          <div className="flex space-x-4">
+            {/* Edit Button */}
+            <button
+              className="text-blue-500 hover:text-blue-700"
+              onClick={handleEditProject}
+            >
+              <FaEdit size={24} />
+            </button>
+
+            {/* Delete Button */}
+            <button
+              className="text-red-500 hover:text-red-700"
+              onClick={handleDeleteProject}
+            >
+              <FaTrashAlt size={24} />
+            </button>
+          </div>
         </div>
 
-        <div className="flex space-x-20">
+        <div className="mt-4">
+          <h3 className="font-semibold text-lg">Project Description</h3>
+          <p className="text-gray-700">{project.projectDetails}</p>
+        </div>
+
+        <div className="flex flex-col lg:flex-row lg:space-x-12 mt-6">
+          {/* Team Members and Registration Numbers */}
           <div>
-            {/* Team Members and Registration Numbers */}
-            <h3 className="text-lg font-semibold mt-4">
-              Team Members & Registration Numbers
-            </h3>
-            <ul
-              className="text-gray-600 ml-1 flex space-x-16"
-              style={{ listStyleType: "none", paddingLeft: "0" }}
-            >
-              {" "}
-              {/* Added list-none class here */}
+            <h3 className="text-lg font-semibold">Team Members & Registration Numbers</h3>
+            <ul className="text-gray-700 space-y-2 mt-2">
               {teamMembers.map((member, index) => (
                 <li key={index}>
-                  <strong>{member}</strong> <br />(
+                  <span className="font-medium">{member}</span> <br />(
                   {registrationNumbers[index] || "N/A"})
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Guide Status and HoD Status */}
-          <div className="mt-6 flex space-x-10 text-center text-gray-800">
-            <p
-              className={`my-auto rounded-sm border-4 cursor-pointer ${
-                getStatusStyles(project.guideStatus).borderColor
-              } px-5 py-2 ${getStatusStyles(project.guideStatus).bgColor} ${
-                getStatusStyles(project.guideStatus).hoverBgColor
-              } ${getStatusStyles(project.guideStatus).hoverBorderColor}`}
+          {/* Guide Status, HoD Status, and Project Status */}
+          <div className="flex  lg:space-x-4 mt-6 lg:mt-0 h-full">
+            <div
+              className={`rounded-md border-2 p-3 ${getStatusStyles(
+                project.guideStatus
+              )}`}
             >
-              <strong>Guide Status:</strong> <br />
-              {project.guideStatus}
-            </p>
-            <p
-              className={`my-auto rounded-sm border-4 cursor-pointer ${
-                getStatusStyles(project.hodStatus).borderColor
-              } px-5 py-2 ${getStatusStyles(project.hodStatus).bgColor} ${
-                getStatusStyles(project.hodStatus).hoverBgColor
-              } ${getStatusStyles(project.hodStatus).hoverBorderColor}`}
+              <strong>Guide Status:</strong> {project.guideStatus}
+            </div>
+            <div
+              className={`rounded-md border-2 p-3 ${getStatusStyles(
+                project.hodStatus
+              )}`}
             >
-              <strong>HoD Status:</strong> <br />
-              {project.hodStatus}
-            </p>
-            <p
-              className={`my-auto rounded-sm border-4 cursor-pointer ${
-                getStatusStyles(project.status).borderColor
-              } px-5 py-2 ${getStatusStyles(project.status).bgColor} ${
-                getStatusStyles(project.status).hoverBgColor
-              } ${getStatusStyles(project.status).hoverBorderColor}`}
-            >
-              <strong>Rejected Status:</strong> <br />
-              {project.status}
-            </p>
+              <strong>HOD Status:</strong> {project.hodStatus}
+            </div>
+            
           </div>
         </div>
       </div>
+
+      {/* Edit Project Modal */}
+      <Modal
+        isOpen={isEditModalOpen}
+        onRequestClose={() => setIsEditModalOpen(false)}
+        contentLabel="Edit Project"
+        className="modal bg-white p-6 rounded-lg shadow-lg max-w-lg mx-auto"
+      >
+        <h2 className="text-xl font-bold mb-4">Edit Project</h2>
+        <form onSubmit={handleSubmitEdit}>
+          <div className="mb-4">
+            <label className="block text-gray-700">Project Name:</label>
+            <input
+              type="text"
+              name="projectName"
+              value={editForm.projectName}
+              onChange={handleEditFormChange}
+              required
+              className="border border-gray-300 rounded-lg w-full p-2 mt-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Project Details:</label>
+            <textarea
+              name="projectDetails"
+              value={editForm.projectDetails}
+              onChange={handleEditFormChange}
+              required
+              className="border border-gray-300 rounded-lg w-full p-2 mt-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">
+              Team Members (comma separated):
+            </label>
+            <input
+              type="text"
+              name="teamMembers"
+              value={editForm.teamMembers}
+              onChange={handleEditFormChange}
+              required
+              className="border border-gray-300 rounded-lg w-full p-2 mt-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">
+              Registration Numbers (comma separated):
+            </label>
+            <input
+              type="text"
+              name="registrationNumbers"
+              value={editForm.registrationNumbers}
+              onChange={handleEditFormChange}
+              required
+              className="border border-gray-300 rounded-lg w-full p-2 mt-2"
+            />
+          </div>
+          <div className="flex space-x-4">
+            <button
+              type="submit"
+              className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+            >
+              Save Changes
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsEditModalOpen(false)}
+              className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 };

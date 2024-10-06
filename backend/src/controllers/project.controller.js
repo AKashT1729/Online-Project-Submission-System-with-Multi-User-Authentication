@@ -65,7 +65,7 @@ const deleteProject = asyncHandler(async (req, res) => {
   }
 
   // Delete the project
-  await project.remove();
+  await project.deleteOne();
 
   return res
     .status(200)
