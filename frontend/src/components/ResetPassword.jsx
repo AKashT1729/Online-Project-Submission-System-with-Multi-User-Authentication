@@ -30,18 +30,17 @@ const ResetPassword = () => {
       });
 
       setSuccessMessage("Password reset successfully.");
-      localStorage.clear()
+      localStorage.clear();
       navigate("/login"); // Redirect to login after successful reset
     } catch (error) {
       setErrorMessage(
-        error.response?.data?.message ||
-          "Something went wrong. Please try again."
+        error.response?.data?.message || "Something went wrong. Please try again."
       );
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
       <form
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md"
@@ -49,9 +48,7 @@ const ResetPassword = () => {
         <h2 className="text-2xl font-bold mb-6 text-center">Reset Password</h2>
 
         {successMessage && (
-          <div className="mb-4 text-green-500 text-center">
-            {successMessage}
-          </div>
+          <div className="mb-4 text-green-500 text-center">{successMessage}</div>
         )}
         {errorMessage && (
           <div className="mb-4 text-red-500 text-center">{errorMessage}</div>

@@ -14,7 +14,7 @@ const ForgotPassword = () => {
     setSuccessMessage("");
 
     try {
-     await axios.post("http://localhost:8000/api/v1/users/forgetPassword", {
+      await axios.post("http://localhost:8000/api/v1/users/forgetPassword", {
         email,
       });
       
@@ -24,7 +24,6 @@ const ForgotPassword = () => {
     } catch (error) {
       setErrorMessage(
         error.response?.data?.message || "User not found"
-         
       );
     }
   };

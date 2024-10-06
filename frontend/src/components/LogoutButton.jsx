@@ -8,10 +8,13 @@ const LogoutButton = () => {
   const handleLogout = async () => {
     try {
       // Call the backend logout endpoint
-      await axios.post("http://localhost:8000/api/v1/users/logout", null, {
-        withCredentials: true, // Ensures cookies are sent with the request
-      },
-     );
+      await axios.post(
+        "http://localhost:8000/api/v1/users/logout",
+        null,
+        {
+          withCredentials: true, // Ensures cookies are sent with the request
+        }
+      );
 
       // Clear access token from localStorage if it's stored there
       localStorage.removeItem("accessToken");
@@ -24,12 +27,14 @@ const LogoutButton = () => {
   };
 
   return (
-    <button
-      onClick={handleLogout}
-      className="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition duration-300"
-    >
-      Log Out
-    </button>
+    <div className="flex justify-center">
+      <button
+        onClick={handleLogout}
+        className="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition duration-300 w-full max-w-xs"
+      >
+        Log Out
+      </button>
+    </div>
   );
 };
 

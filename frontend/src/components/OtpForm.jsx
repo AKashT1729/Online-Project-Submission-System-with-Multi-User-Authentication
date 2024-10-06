@@ -22,6 +22,11 @@ const OtpForm = () => {
         document.getElementById(`otp-input-${index + 1}`).focus();
       }
     }
+
+    // Move to the previous input if backspace is pressed
+    if (!value && index > 0) {
+      document.getElementById(`otp-input-${index - 1}`).focus();
+    }
   };
 
   // Handle OTP verification
@@ -67,12 +72,12 @@ const OtpForm = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
       <form
-        className="w-[300px] h-auto bg-white flex flex-col items-center justify-center p-6 gap-5 shadow-lg rounded-lg"
+        className="w-full max-w-sm bg-white flex flex-col items-center justify-center p-6 gap-5 shadow-lg rounded-lg"
         onSubmit={handleSubmit}
       >
-        <h2 className="text-lg font-bold text-gray-900">Enter OTP</h2>
+        <h2 className="text-xl font-bold text-gray-900">Enter OTP</h2>
         <p className="text-sm text-gray-600 text-center">
           We have sent a verification code to your email
         </p>
@@ -84,7 +89,7 @@ const OtpForm = () => {
               id={`otp-input-${index}`}
               type="text"
               maxLength="1"
-              className="w-10 h-10 text-center bg-gray-200 rounded-lg border-none focus:bg-blue-100 outline-none font-bold text-gray-700 transition-colors"
+              className="w-12 h-12 text-center bg-gray-200 rounded-lg border-none focus:bg-blue-100 outline-none font-bold text-gray-700 transition-colors"
               value={val}
               onChange={(e) => handleChange(index, e.target.value)}
               required
@@ -111,9 +116,7 @@ const OtpForm = () => {
           <div className="mt-2 text-red-500 text-center">{errorMessage}</div>
         )}
         {successMessage && (
-          <div className="mt-2 text-green-500 text-center">
-            {successMessage}
-          </div>
+          <div className="mt-2 text-green-500 text-center">{successMessage}</div>
         )}
       </form>
     </div>

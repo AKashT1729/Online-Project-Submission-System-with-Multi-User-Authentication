@@ -62,7 +62,6 @@ const StudentProjectDetails = ({ user }) => {
       }
     }
   };
-  
 
   const handleEditProject = () => {
     // Populate the form with the current project data
@@ -174,8 +173,8 @@ const StudentProjectDetails = ({ user }) => {
 
       {/* Project Information */}
       <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
-        <div className="flex justify-between items-center">
-          <div>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+          <div className="mb-4 md:mb-0">
             <h2 className="text-2xl font-semibold">{project.projectName}</h2>
             <p className="text-gray-500">(Project Name)</p>
           </div>
@@ -205,20 +204,19 @@ const StudentProjectDetails = ({ user }) => {
 
         <div className="flex flex-col lg:flex-row lg:space-x-12 mt-6">
           {/* Team Members and Registration Numbers */}
-          <div>
+          <div className="flex-1">
             <h3 className="text-lg font-semibold">Team Members & Registration Numbers</h3>
             <ul className="text-gray-700 space-y-2 mt-2">
               {teamMembers.map((member, index) => (
                 <li key={index}>
-                  <span className="font-medium">{member}</span> <br />(
-                  {registrationNumbers[index] || "N/A"})
+                  <span className="font-medium">{member}</span> <br />( {registrationNumbers[index] || "N/A"} )
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Guide Status, HoD Status, and Project Status */}
-          <div className="flex  lg:space-x-4 mt-6 lg:mt-0 h-full">
+          {/* Guide Status and HoD Status */}
+          <div className="flex flex-col lg:flex-row lg:space-x-4 mt-6 lg:mt-0">
             <div
               className={`rounded-md border-2 p-3 ${getStatusStyles(
                 project.guideStatus
@@ -233,7 +231,6 @@ const StudentProjectDetails = ({ user }) => {
             >
               <strong>HOD Status:</strong> {project.hodStatus}
             </div>
-            
           </div>
         </div>
       </div>
@@ -248,67 +245,66 @@ const StudentProjectDetails = ({ user }) => {
         <h2 className="text-xl font-bold mb-4">Edit Project</h2>
         <form onSubmit={handleSubmitEdit}>
           <div className="mb-4">
-            <label className="block text-gray-700">Project Name:</label>
+            <label className="block text-gray-700" htmlFor="projectName">
+              Project Name
+            </label>
             <input
               type="text"
+              id="projectName"
               name="projectName"
-              value={editForm.projectName}
+              value={editForm.projectName || ""}
               onChange={handleEditFormChange}
               required
-              className="border border-gray-300 rounded-lg w-full p-2 mt-2"
+              className="border rounded-md p-2 w-full"
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Project Details:</label>
+            <label className="block text-gray-700" htmlFor="projectDetails">
+              Project Details
+            </label>
             <textarea
+              id="projectDetails"
               name="projectDetails"
-              value={editForm.projectDetails}
+              value={editForm.projectDetails || ""}
               onChange={handleEditFormChange}
               required
-              className="border border-gray-300 rounded-lg w-full p-2 mt-2"
+              className="border rounded-md p-2 w-full h-32"
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">
-              Team Members (comma separated):
+            <label className="block text-gray-700" htmlFor="teamMembers">
+              Team Members (comma-separated)
             </label>
             <input
               type="text"
+              id="teamMembers"
               name="teamMembers"
-              value={editForm.teamMembers}
+              value={editForm.teamMembers || ""}
               onChange={handleEditFormChange}
               required
-              className="border border-gray-300 rounded-lg w-full p-2 mt-2"
+              className="border rounded-md p-2 w-full"
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">
-              Registration Numbers (comma separated):
+            <label className="block text-gray-700" htmlFor="registrationNumbers">
+              Registration Numbers (comma-separated)
             </label>
             <input
               type="text"
+              id="registrationNumbers"
               name="registrationNumbers"
-              value={editForm.registrationNumbers}
+              value={editForm.registrationNumbers || ""}
               onChange={handleEditFormChange}
               required
-              className="border border-gray-300 rounded-lg w-full p-2 mt-2"
+              className="border rounded-md p-2 w-full"
             />
           </div>
-          <div className="flex space-x-4">
-            <button
-              type="submit"
-              className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
-            >
-              Save Changes
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsEditModalOpen(false)}
-              className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
-            >
-              Cancel
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+          >
+            Save Changes
+          </button>
         </form>
       </Modal>
     </div>

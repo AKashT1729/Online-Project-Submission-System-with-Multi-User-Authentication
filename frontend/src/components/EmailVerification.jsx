@@ -20,7 +20,6 @@ const EmailVerification = () => {
 
   // Ensure user is not null before trying to access the email property
   const email = user?.email;
-  // console.log(email);
 
   const handleOtpChange = (e) => {
     setOtp(e.target.value);
@@ -46,7 +45,6 @@ const EmailVerification = () => {
       );
 
       setSuccessMessage("Email verified successfully!");
-      //   console.log(response.data);
       const userRole = user?.role;
       // Navigate to the user dashboard after successful verification
       if (userRole === "Student") {

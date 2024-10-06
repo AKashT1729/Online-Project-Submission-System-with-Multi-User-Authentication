@@ -20,21 +20,24 @@ const ProjectGuideDashboard = ({ user }) => {
   }, [user, navigate]);
 
   if (loading) {
-    return <div>Loading...</div>; // Display a loading indicator while checking user
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-blue-500"></div>
+      </div>
+    ); // Display a loading spinner while checking user
   }
 
   return (
     <>
       <Navbar user={user} />
-      <div className="h-dvh flex">
-         <div className="h-vh">
-        <ProfileSection user={user} />
+      <div className="flex flex-col md:flex-row h-screen">
+        <div className="md:w-1/4 p-4 border-r border-gray-200">
+          <ProfileSection user={user} />
+        </div>
+        <div className="md:w-3/4 p-4">
+          <ProjectList user={user} />
+        </div>
       </div>
-      <div className="">
-        <ProjectList  user={user}/>
-      </div>
-      </div>
-      
     </>
   );
 };

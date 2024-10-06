@@ -50,7 +50,7 @@ const ProjectDetails = ({ project, user, onBack }) => {
         [user.role === "ProjectGuide" ? "guideStatus" : "hodStatus"]: status,
       };
 
-      const response = await axios.patch(
+      await axios.patch(
         "http://localhost:8000/api/v1/projects/review-submission",
         updateData,
         {
@@ -60,8 +60,6 @@ const ProjectDetails = ({ project, user, onBack }) => {
         }
       );
 
-      // Optionally, you can update the local project state with the new status
-      // But assuming the parent component will handle the re-fetch or refresh
       alert(`Project ${status} successfully!`);
     } catch (error) {
       setError(error.response?.data?.message || "Failed to update status");
@@ -87,7 +85,7 @@ const ProjectDetails = ({ project, user, onBack }) => {
 
         {/* Team Members */}
         <h3 className="text-lg font-semibold">Team Members:</h3>
-        <ul className="list-disc ml-4">
+        <ul className="list-disc ml-4 mb-4">
           {teamMembers.map((member, index) => (
             <li key={index} className="text-gray-800">
               {member} (Reg. No: {registrationNumbers[index] || "N/A"})
@@ -96,7 +94,7 @@ const ProjectDetails = ({ project, user, onBack }) => {
         </ul>
 
         {/* Statuses */}
-        <div className="mt-4 flex space-x-4">
+        <div className="mt-4 flex flex-col md:flex-row space-x-0 md:space-x-4">
           <div
             className={`rounded-md border-4 px-4 py-2 ${getStatusStyles(
               project.guideStatus
@@ -122,10 +120,10 @@ const ProjectDetails = ({ project, user, onBack }) => {
 
         {/* Approve/Reject Buttons for ProjectGuide and HoD */}
         {["HoD", "ProjectGuide"].includes(user.role) && (
-          <div className="mt-4 flex space-x-4">
+          <div className="mt-4 flex flex-col md:flex-row space-x-0 md:space-x-4 ">
             <button
               onClick={() => handleStatusUpdate("Approved")}
-              className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-300"
+              className="bg-green-500 text-white py-2 px-4 mb-2 rounded hover:bg-green-600 transition duration-300"
             >
               Approve Project
             </button>
