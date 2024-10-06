@@ -1,15 +1,13 @@
 import React from "react";
 
-function Loading() {
+const Loading = () => {
   return (
     <>
-      <div className ="w-full gap-x-2 flex justify-center items-center">
-        <div className="w-5 bg-[#d991c2] animate-pulse h-5 rounded-full animate-bounce"></div>
-        <div className="w-5 animate-pulse h-5 bg-[#9869b8] rounded-full animate-bounce"></div>
-        <div className="w-5 h-5 animate-pulse bg-[#6756cc] rounded-full animate-bounce"></div>
+      <div className="flex justify-center items-center h-full">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-blue-500"></div>
       </div>
     </>
   );
-}
+};
 
 export default Loading;

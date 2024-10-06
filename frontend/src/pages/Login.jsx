@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import Loading from "../components/Loading";
 
-const Login = ({setUser }) => {
+
+const Login = ({ setUser }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -20,19 +22,42 @@ const Login = ({setUser }) => {
     });
   };
 
+  const validateEmailOrPhone = (input) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phonePattern = /^\d{10,15}$/;
+    return emailPattern.test(input) || phonePattern.test(input);
+  };
+
+  const validatePassword = (password) => {
+    return password.length >= 6;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage("");
     setSuccessMessage("");
     setIsLoading(true);
 
-    // Validate input
+    // Input validation
     if (!formData.email || !formData.password) {
       setErrorMessage("Please enter both email/phone and password.");
       setIsLoading(false);
       return;
     }
-// console.log(formData);
+
+    // Validate email or phone
+    if (!validateEmailOrPhone(formData.email)) {
+      setErrorMessage("Please enter a valid email address or phone number.");
+      setIsLoading(false);
+      return;
+    }
+
+    // Validate password
+    if (!validatePassword(formData.password)) {
+      setErrorMessage("Password must be at least 6 characters long.");
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const response = await axios.post(
@@ -43,15 +68,12 @@ const Login = ({setUser }) => {
 
       const { accessToken, user } = response.data.data;
       const { role, emailVerified } = user;
-    
+
       // Store access token and user details securely
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("user", JSON.stringify(user));
       setUser(user);
       setSuccessMessage("User logged in successfully.");
-
-      // console.log("User Role:", role);  // Debug log for role
-      // console.log("Email Verified:", emailVerified);
 
       // Navigate based on email verification and role
       if (!emailVerified) {
@@ -90,47 +112,51 @@ const Login = ({setUser }) => {
           <div className="mb-4 text-green-500 text-center">{successMessage}</div>
         )}
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700" htmlFor="emailOrPhone">
-              Email or Phone Number
-            </label>
-            <input
-              type="text"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              placeholder="Enter your email or phone number"
-              required
-              aria-label="Email or phone number"
-            />
-          </div>
+        {isLoading ? (
+          <Loading /> // Show loading component when logging in
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label className="block text-gray-700" htmlFor="emailOrPhone">
+                Email or Phone Number
+              </label>
+              <input
+                type="text"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                placeholder="Enter your email or phone number"
+                required
+                aria-label="Email or phone number"
+              />
+            </div>
 
-          <div className="mb-4">
-            <label className="block text-gray-700" htmlFor="password">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              placeholder="Enter your password"
-              required
-              aria-label="Password"
-            />
-          </div>
+            <div className="mb-4">
+              <label className="block text-gray-700" htmlFor="password">
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                placeholder="Enter your password"
+                required
+                aria-label="Password"
+              />
+            </div>
 
-          <button
-            type="submit"
-            className={`w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition duration-300 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-            disabled={isLoading}
-          >
-            {isLoading ? "Logging in..." : "Log In"}
-          </button>
-        </form>
+            <button
+              type="submit"
+              className={`w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition duration-300 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              disabled={isLoading}
+            >
+              {isLoading ? "Logging in..." : "Log In"}
+            </button>
+          </form>
+        )}
 
         <div className="mt-4 text-center">
           <p className="text-gray-600">
