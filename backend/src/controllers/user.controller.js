@@ -141,7 +141,7 @@ const logingUser = asyncHandler(async (req, res) => {
 
 //LogOut User
 const logOutUser = asyncHandler(async (req, res) => {
-  console.log(req.user);
+  console.log(req);
   
   if (!req.user || !req.user._id) {
     return res.status(401).json(new ApiError(401, "Unauthorized request"));
