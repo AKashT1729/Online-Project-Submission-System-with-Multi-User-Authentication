@@ -141,26 +141,22 @@ const logingUser = asyncHandler(async (req, res) => {
 
 //LogOut User
 const logOutUser = asyncHandler(async (req, res) => {
-  // console.log(req.user)
-  await User.findByIdAndUpdate(
-    req.user._id,
-    {
-      $unset: {
-        refreshToken: 1,
-      },
-    },
-    { new: true }
-  );
-  const optons = {
+  if (!req.user || !req.user._id) {
+    return res.status(401).json(new ApiError(401, "Unauthorized request"));
+  }
+  
+  await User.findByIdAndUpdate(req.user._id, { $unset: { refreshToken: 1 } }, { new: true });
+  const options = {
     httpOnly: true,
     secure: true,
   };
   return res
     .status(200)
-    .clearCookie("accessToken", optons)
-    .clearCookie("refreshToken", optons)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
     .json(new ApiResponse(200, {}, "user logged out successfully"));
 });
+
 
 //for frontend users only use this method to refresh the  access token if  access token is expired
 const refreshAccessToken = asyncHandler(async (req, res) => {
