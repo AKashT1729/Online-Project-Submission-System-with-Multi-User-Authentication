@@ -25,7 +25,7 @@ const LogoutButton = () => {
       console.error("Logout failed:", error?.response?.data?.message || error.message);
     }
   };
-
+  
   return (
     <div className="flex justify-center">
       <button
