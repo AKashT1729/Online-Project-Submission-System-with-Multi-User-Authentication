@@ -24,7 +24,7 @@ const uploadOnCloudinary = async (localSrsFile) => {
       timeout: 60000, // Adjust timeout as needed
     });
 
-    console.log("File successfully uploaded to Cloudinary:", uploadResult.url);
+    console.log("File successfully uploaded to Cloudinary:");
 
     // After successful upload, delete the local file
     fs.unlinkSync(localSrsFile);
