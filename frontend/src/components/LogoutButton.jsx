@@ -7,12 +7,13 @@ const LogoutButton = () => {
 
   const handleLogout = async () => {
     try {
+      const token = localStorage.getItem("accessToken");
       // Call the backend logout endpoint
       await axios.post(
         "https://online-project-submission-system-with.onrender.com/api/v1/users/logout",
         null,
         {
-          withCredentials: true, // Ensures cookies are sent with the request
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
