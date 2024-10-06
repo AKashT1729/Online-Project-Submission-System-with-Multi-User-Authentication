@@ -32,7 +32,7 @@ const EmailVerification = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/users/verify-otp",
+        "https://online-project-submission-system-with.onrender.com/api/v1/users/verify-otp",
         {
           email,
           otp,

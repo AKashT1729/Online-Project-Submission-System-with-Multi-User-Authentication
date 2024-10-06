@@ -41,7 +41,7 @@ const OtpForm = () => {
 
     try {
       // Verify OTP
-      await axios.post("http://localhost:8000/api/v1/users/verifyOtp", {
+      await axios.post("https://online-project-submission-system-with.onrender.com/api/v1/users/verifyOtp", {
         email,
         otp: otpString,
       });
@@ -59,7 +59,7 @@ const OtpForm = () => {
   const handleResend = async () => {
     try {
       // Resend OTP
-      await axios.post("http://localhost:8000/api/v1/users/forgetPassword", {
+      await axios.post("https://online-project-submission-system-with.onrender.com/api/v1/users/forgetPassword", {
         email,
       });
       setSuccessMessage("OTP sent successfully.");

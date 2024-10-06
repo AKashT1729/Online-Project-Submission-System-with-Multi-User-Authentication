@@ -13,7 +13,7 @@ import ForgotPassword from '../components/ForgotPassword'
 import OtpForm from '../components/OtpForm'
 import ResetPassword from '../components/ResetPassword'
 import SubmitProject from '../pages/SubmitProject'
-import ProjectList from '../pages/ProjectList';
+
 const AppRouter = () => {
 
   const [user, setUser] = useState(null);

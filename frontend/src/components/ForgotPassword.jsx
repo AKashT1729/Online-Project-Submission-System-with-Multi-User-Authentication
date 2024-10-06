@@ -14,7 +14,7 @@ const ForgotPassword = () => {
     setSuccessMessage("");
 
     try {
-      await axios.post("http://localhost:8000/api/v1/users/forgetPassword", {
+      await axios.post("https://online-project-submission-system-with.onrender.com/api/v1/users/forgetPassword", {
         email,
       });
       

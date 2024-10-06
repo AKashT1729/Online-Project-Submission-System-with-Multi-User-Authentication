@@ -24,7 +24,7 @@ const ResetPassword = () => {
 
     try {
       // Send new password to the backend
-      await axios.post("http://localhost:8000/api/v1/users/resetPassword", {
+      await axios.post("https://online-project-submission-system-with.onrender.com/api/v1/users/resetPassword", {
         email,
         newPassword,
       });

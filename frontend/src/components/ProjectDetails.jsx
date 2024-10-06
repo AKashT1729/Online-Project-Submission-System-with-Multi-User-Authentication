@@ -51,7 +51,7 @@ const ProjectDetails = ({ project, user, onBack }) => {
       };
 
       await axios.patch(
-        "http://localhost:8000/api/v1/projects/review-submission",
+        "https://online-project-submission-system-with.onrender.com/api/v1/projects/review-submission",
         updateData,
         {
           headers: {

@@ -28,7 +28,7 @@ const StudentProjectDetails = ({ user }) => {
   const getAllProjects = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/v1/projects/project",
+        "https://online-project-submission-system-with.onrender.com/api/v1/projects/project",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -46,7 +46,7 @@ const StudentProjectDetails = ({ user }) => {
     if (window.confirm("Are you sure you want to delete this project?")) {
       try {
         await axios.delete(
-          `http://localhost:8000/api/v1/projects/deleteProject`,
+          `https://online-project-submission-system-with.onrender.com/api/v1/projects/deleteProject`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -82,7 +82,7 @@ const StudentProjectDetails = ({ user }) => {
     e.preventDefault();
     try {
       const response = await axios.put(
-        `http://localhost:8000/api/v1/projects/updateProject`,
+        `https://online-project-submission-system-with.onrender.com/api/v1/projects/updateProject`,
         {
           _id: project._id,
           projectName: editForm.projectName,

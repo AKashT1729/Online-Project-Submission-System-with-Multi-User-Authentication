@@ -26,7 +26,7 @@ function VerifyButton() {
 
     try {
       await axios.post(
-        "http://localhost:8000/api/v1/users/generate-otp",
+        "https://online-project-submission-system-with.onrender.com/api/v1/users/generate-otp",
         {
           email,
         },

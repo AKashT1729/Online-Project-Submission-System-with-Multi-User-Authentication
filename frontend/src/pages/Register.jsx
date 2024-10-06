@@ -83,7 +83,7 @@ const Register = () => {
     try {
       // Make the API request
       const response = await axios.post(
-        "http://localhost:8000/api/v1/users/register",
+        "https://online-project-submission-system-with.onrender.com/api/v1/users/register",
         formData
       );
 

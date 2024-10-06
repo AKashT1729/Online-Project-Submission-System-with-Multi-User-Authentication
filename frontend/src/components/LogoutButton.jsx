@@ -9,7 +9,7 @@ const LogoutButton = () => {
     try {
       // Call the backend logout endpoint
       await axios.post(
-        "http://localhost:8000/api/v1/users/logout",
+        "https://online-project-submission-system-with.onrender.com/api/v1/users/logout",
         null,
         {
           withCredentials: true, // Ensures cookies are sent with the request

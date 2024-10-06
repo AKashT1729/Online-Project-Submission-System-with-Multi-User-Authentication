@@ -73,7 +73,7 @@ const SubmitProject = ({ user }) => {
     try {
       // Make the API call
       const response = await axios.post(
-        'http://localhost:8000/api/v1/projects/submit-project',
+        'https://online-project-submission-system-with.onrender.com/api/v1/projects/submit-project',
         formData,
         {
           headers: {

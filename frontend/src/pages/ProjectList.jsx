@@ -11,7 +11,7 @@ const ProjectList = ({ user }) => {
   const getAllProjects = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/v1/projects/projects",
+        "https://online-project-submission-system-with.onrender.com/api/v1/projects/projects",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
